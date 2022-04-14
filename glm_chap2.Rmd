@@ -1,0 +1,56 @@
+---
+title: "glm_chap2"
+author: "linhnm"
+date: "4/14/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+gestation
+
+```{r gestation}
+library(GLMsData); data("gestation"); str(gestation)
+```
+let assign beta0 and beta1 for calculating sum of square
+```{r}
+y <- gestation$Weight
+x <- gestation$Age
+wts <- gestation$Births
+beta0.A <- -0.9
+beta1.A <- 0.1
+mu.A <- beta0.A + beta1.A * x
+SA <- sum(wts*(y - mu.A)^2); SA
+```
+using least square
+```{r}
+xbar <- weighted.mean(x, w=wts)
+ybar <- weighted.mean(y, w=wts)
+SSx <- sum(wts*(x - xbar)^2)
+SSxy <- sum(wts*(x - xbar)*y)
+
+beta1 <- SSxy / SSx
+beta0 <- ybar - beta1*xbar
+
+mu <- beta0 + beta1*x
+RSS <- sum(wts*(y - mu)^2)
+
+c(beta0=beta0, beta1=beta1, RSS=RSS)
+
+```
+```{r}
+gest.wtd <- lm(formula = Weight ~ Age, weights = Births, data = gestation)
+summary(gest.wtd)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
