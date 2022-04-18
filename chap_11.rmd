@@ -1,0 +1,35 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(GLMsData); data(lime); str(lime)
+
+lime.natural <- lime[lime$Origin == "Natural",]
+
+lime.log <- glm(Foliage ~ log(DBH), family=Gamma(link="log"), data=lime)
+lime.log$coefficients
+
+lime.inv <- update(lime.log, family=Gamma(link="inverse") )
+
+# lime.log.natural <- glm( Foliage ~ log(DBH), family=Gamma(link="log"), data=lime.natural)
+# lime.log.natural
+
+```
+
+Type any R code in the chunk, for example:
+```{r}
+x <- log(lime$DBH)
+y <- -4.707996  + 1.84227 * x
+plot(log(lime$Foliage) ~ log(lime$DBH), lty = 1, xlab = 'log DBH', ylab = 'log foliage', col = "red")
+lines(x, y, lty = 3, col = 'blue')
+title("log(Foliage) ~ log(DHB)")
+text("y = -4.707996  + 1.84227 * x", x = 1, y = -3.25)
+```
+
+```{r}
+library("statmod")
+qqnorm( qr1 <- qresid(lime.log), las=1 ); qqline( qr1 )
+plot( cooks.distance(lime.log), ylab="Cook's distance", las=1, type="h")
+```
