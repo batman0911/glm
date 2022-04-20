@@ -56,7 +56,7 @@ lime.log$coefficients
 ```
 ---
 ### Ví dụ 1
-<img src="Rplot05.png">
+<img src="Rplot05.png" style="height:auto; width:auto">
 
 ---
 ### Ví dụ 1
