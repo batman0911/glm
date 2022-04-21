@@ -264,7 +264,7 @@ Giá trị càng nhỏ thì model càng tốt.
 c("Gamma:"=AIC(lime.log), "inv. Gauss.:"=AIC(lime.iG))
 ```
 
-```
+```{r}
   Gamma: inv. Gauss.: 
 750.3267    1089.5297
 ```
