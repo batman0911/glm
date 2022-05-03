@@ -184,9 +184,11 @@ round(anova(lime.log,test="F", dispersion=phi.md), 3)
 ```
 
 ```{r}
-         Df Deviance Resid. Df Resid. Dev      F    Pr(>F)    
-NULL                       384     508.48                     
-log(DBH)  1   342.43       383     166.06 789.79 < 2.2e-16 ***
+                Df Deviance Resid. Df Resid. Dev       F    Pr(>F)    
+NULL                              384     508.48                      
+Origin           2    19.89       382     488.59  24.690 < 2.2e-16 ***
+log(DBH)         1   328.01       381     160.58 814.165 < 2.2e-16 ***
+Origin:log(DBH)  2     7.89       379     152.69   9.793 < 2.2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 ```
@@ -237,7 +239,7 @@ Pearson estimation cho $\phi$
 
 $$\bar{\phi} = \dfrac{1}{n - p'} \sum_{i = 1}^{n} \dfrac{w_i (y_i - \hat{\mu}_i)}{\hat{\mu}_i^3}$$
 
-Trong phân phối `Gamma` thì độ lệch khá 'nhạy cảm' với lỗi làm tròn với những giá trị $y_i$ nhỏ nên ước lượng Pearson sẽ tốt hơn là ước lượng độ lệch trung bình khi giá trị của $y$ là nhỏ.
+Trong phân phối `inverse Gaussian` thì độ lệch khá 'nhạy cảm' với lỗi làm tròn với những giá trị $y_i$ nhỏ nên ước lượng Pearson sẽ tốt hơn là ước lượng độ lệch trung bình khi giá trị của $y$ là nhỏ.
 
 ---
 
@@ -264,17 +266,19 @@ Kết quả thu được cho ước lượng của $\phi$ với các loại ư�
 ---
 
 Akaike’s An Information Criterion
-nhắc lại 
+nhắc lại
 
-$$AIC = n \log(RSS / n) + 2p'$$
+$$AIC = -2 \times l(\hat{\beta}_0,...,\hat{\beta}_p, \phi; y) + 2p' $$
 
-Giá trị càng nhỏ thì model càng tốt. 
+trong đó $l$ là hàm $log$ likelihood
+
+Giá trị càng nhỏ thì model càng tốt.
 
 ```{r}
 c("Gamma:"=AIC(lime.log), "inv. Gauss.:"=AIC(lime.iG))
 ```
 
-```
+```{r}
   Gamma: inv. Gauss.: 
 750.3267    1089.5297
 ```
