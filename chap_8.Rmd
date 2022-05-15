@@ -23,17 +23,27 @@ resD <- resid(fit)
 resP <- resid(fit, type = "pearson")
 resQ <- qresid(fit)
 
-qqnorm(resD)
-qqline(resD)
-title("q-q plot for deviance residual")
+rs1 <- sum(fit$weights * fit$residuals^2)
+rs2 <- sum(resP^2)
+rs3 <- sum(resD^2)
 
-qqnorm(resP)
-qqline(resP)
-title("q-q plot for pearson residual")
+summary(fit)
 
-qqnorm(resQ)
-qqline(resQ)
-title("q-q plot for quantile residual")
+# goodness of fit test
+1 - pchisq(rs2, df = 0)
+pchisq(c(1, 2, 10, 100, 300), df = 10)
+
+#qqnorm(resD)
+#qqline(resD)
+#title("q-q plot for deviance residual")
+
+#qqnorm(resP)
+#qqline(resP)
+#title("q-q plot for pearson residual")
+
+#qqnorm(resQ)
+#qqline(resQ)
+#title("q-q plot for quantile residual")
 
 ```
 
@@ -43,8 +53,20 @@ data("seabirds"); str(seabirds)
 fit <- glm(Count ~ Quadrat + factor(Species), data = seabirds, family = poisson(link = "log"))
 fit
 
-res <- resid(fit)
+resD <- resid(fit)
+resP <- resid(fit, type = "pearson")
 f <- fitted(fit)
 plot(f, res)
+
+1 - pchisq(c(fit$deviance, sum(resP^2)), df = 1)
+```
+```{r}
+y <- c(15, 26, 4); x <- c(1/4, 1/2, 1/4)
+fit <- glm( y ~ 0+x, family=poisson)
+summary(fit)
+pearson.gof <- sum(fit$weights * fit$residuals^2)
+resPearson <- resid(fit, type = "pearson")
+1 - pchisq(sum(resPearson^2), df = 2)
+1 - pchisq(fit$deviance, df = 2)
 ```
 
