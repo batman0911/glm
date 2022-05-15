@@ -1,5 +1,5 @@
 ---
-marp: true
+marp: false
 ---
 
 # 11.5 Link Function
@@ -115,8 +115,22 @@ Phương trình này được giải bằng phương pháp lặp, chính vì v�
 Ước lượng deviance 
 $$\tilde{\phi} = \dfrac{D(y, \hat{\mu})}{n - p'}$$
 thường có ý nghĩa cho các giá trị $y_i$ rất bé trong phân phối `Gamma` nên ta có thể ưu tiên dùng ước lượng Pearson
-$$\bar\phi = \dfrac{1}{n - p'} \sum_{i = 1}^n \dfrac{w_i}{\hat\mu_i^2}$$
+
+$$\bar\phi = \dfrac{1}{n - p'} \sum_{i = 1}^n \dfrac{w_i (y_i - \hat{\mu}_i)^2}{\hat\mu_i^2}$$  
+
 khi còn nghi ngờ độ chính xác của các giá trị nhỏ
+
+---
+
+Overdispersion?
+Hiện tuợng overdispersion có xảy ra với mô hình `Gamma GML` hay không?
+
+---
+
+Trong phân bố `Gamma`, ta có hàm <em>variance</em> $V(\mu) = \mu^2$
+với $var[y] = \phi V(\mu)$ và uớc lượng Pearson cho $phi$ ta có thể viết
+
+$$var[y] \sim \sum_{i=1}^n \dfrac{w_i (y_i - \hat{\mu}_i)^2}{\hat\mu_i^2}\hat\mu_i^2$$
 
 ---
 
