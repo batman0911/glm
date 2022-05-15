@@ -1,0 +1,50 @@
+---
+title: "chap_8"
+author: "linhnm"
+date: '2022-05-15'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+pr 8.4
+```{r}
+set.seed(10)
+y <- rpois(1000, 1)
+mean(y)
+hist(y)
+#y
+fit <- glm(y ~ 1, family = poisson(link = "log"))
+fit$coefficients
+
+resD <- resid(fit)
+resP <- resid(fit, type = "pearson")
+resQ <- qresid(fit)
+
+qqnorm(resD)
+qqline(resD)
+title("q-q plot for deviance residual")
+
+qqnorm(resP)
+qqline(resP)
+title("q-q plot for pearson residual")
+
+qqnorm(resQ)
+qqline(resQ)
+title("q-q plot for quantile residual")
+
+```
+
+pr 8.10
+```{r}
+data("seabirds"); str(seabirds)
+fit <- glm(Count ~ Quadrat + factor(Species), data = seabirds, family = poisson(link = "log"))
+fit
+
+res <- resid(fit)
+f <- fitted(fit)
+plot(f, res)
+```
+
