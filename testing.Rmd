@@ -1,0 +1,47 @@
+---
+title: "testing"
+author: "linhnm"
+date: "4/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+library(statmod)
+library(GLMsData); data(lime); str(lime)
+```
+
+## Including Plots
+
+```{r}
+lime.log <- glm(Foliage ~ log(DBH), family=Gamma(link="log"),data=lime)
+#lime.log$coefficients
+```
+plot
+```{r}
+plot(rstandard(lime.log) ~ log(fitted(lime.log)), main="Log link", las=1, xlab="Log of fitted values", ylab="Standardized residuals")
+
+eta.log <- lime.log$linear.predictor
+plot(resid(lime.log, type="working") + eta.log ~ eta.log, las=1, ylab="Working resid", xlab="Linear predictor, eta")
+
+qqnorm(qr1 <- qresid(lime.log), las=1 ); qqline(qr1)
+
+plot( cooks.distance(lime.log), ylab="Cook's distance", las=1, type="h")
+```
+
+estimate for phi
+```{r}
+phi.md <- deviance(lime.log)/df.residual(lime.log)
+phi.pearson <- summary( lime.log )$dispersion
+c( "Mean Deviance"=phi.md, "Pearson"=phi.pearson)
+```
+
+```{r}
+round(anova(lime.log, test="F"), 3)
+```
+

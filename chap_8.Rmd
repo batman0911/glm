@@ -55,11 +55,16 @@ fit
 
 resD <- resid(fit)
 resP <- resid(fit, type = "pearson")
+resQ <- qresid(fit)
 f <- fitted(fit)
-plot(f, res)
+plot(f, resQ)
 
 1 - pchisq(c(fit$deviance, sum(resP^2)), df = 1)
+
+qqnorm(resQ)
+qqline(resQ)
 ```
+
 ```{r}
 y <- c(15, 26, 4); x <- c(1/4, 1/2, 1/4)
 fit <- glm( y ~ 0+x, family=poisson)
@@ -68,5 +73,38 @@ pearson.gof <- sum(fit$weights * fit$residuals^2)
 resPearson <- resid(fit, type = "pearson")
 1 - pchisq(sum(resPearson^2), df = 2)
 1 - pchisq(fit$deviance, df = 2)
+```
+
+pr 8.11
+```{r}
+data("blocks"); str(blocks)
+hist(blocks$Number)
+
+set.seed(100)
+lambda <- mean(blocks$Number)
+y <- rpois(1000, lambda)
+hist(y)
+
+m1 <- glm(Number ~ Age, data = blocks, family = poisson())
+summary(m1)
+
+#plot(rstandard(m1)~fitted(m1))
+
+#rstandard(m1)
+#resid(m1)
+
+resP <- resid(m1, type = "pearson")
+resQ <- qresid(m1)
+
+qqnorm(resQ)
+qqline(resQ)
+
+summary(aov(m1))
+
+m1$df.residual
+length(blocks$Number)
+
+pchisq(c(m1$deviance, sum(resQ^2)), df = m1$df.residual, lower.tail = FALSE)
+
 ```
 
