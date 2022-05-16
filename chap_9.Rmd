@@ -43,6 +43,7 @@ qqline(resQ)
 ```
 calculate ED50
 ```{r}
+library("MASS")
 ED50 <- cbind("logit" = dose.p(tur.m1), "probit" = dose.p(tur.m2), "c-log-log" = dose.p(tur.m3))
 ED50
 ```
@@ -68,6 +69,8 @@ confint(fit)
 
 -0.4122 - qnorm(0.975) * 0.1842
 -0.4122 + qnorm(0.975) * 0.1842
+
+dose.p(fit)
 #exp(coef(fit))
 ```
 
@@ -91,6 +94,78 @@ cbind("female beta" = betaF, "female p-value" = pvalF)
 betaM.l <- betaM - qnorm(0.975) * seM
 betaM.u <- betaM + qnorm(0.975) * seM
 cbind("lower beta" = betaM.l, "mean beta" = betaM, "upper beta" = betaM.u)
+```
+calculate for overdispersion
+```{r}
+nMale <- 1323; nFemale <- 1427
+pMale <- 13; pFemale <- 13
+DfMale <- nMale - pMale
+DfFemale <- nFemale - pFemale
+
+
+```
+
+ex 9.7
+```{r}
+data("shuttles"); str(shuttles)
+shuttles
+fit <- glm(Damaged / 6 ~ Temp, weights = rep(6, length(Temp)), data = shuttles, family = binomial())
+summary(fit)
+
+fit$null.deviance - fit$deviance
+pchisq(fit$null.deviance - fit$deviance, 1, lower.tail = FALSE)
+
+mu <- predict(fit, newdata = data.frame(Temp = 31), se.fit = TRUE, type = "response")
+mu
+
+dose.p(fit)
+```
+solve
+```{r}
+library(statmod)
+data(shuttles)
+### Part 1
+plot( Damaged/6 ~ Temp, data=shuttles)
+### Part 2
+shuttle.m <- glm(Damaged/6 ~ Temp, weights=rep(6, length(Temp)),
+family=binomial, data=shuttles)
+### Part 3
+qqnorm( qresid(shuttle.m))
+qqline(qresid(shuttle.m))
+colSums(influence.measures(shuttle.m)$is.inf)
+### Part 4
+predict(shuttle.m, newdata=data.frame(Temp=31), type="response")
+```
+
+ex 9.8
+```{r}
+df <- data.frame("Dose" = c(0.000625, 0.00125, 0.0025, 0.005, 0.01),
+                 "Total" = rep(40, 5),
+                 "Survivors" = c(7, 18, 32, 35, 38))
+df
+
+fit <- glm(Survivors / Total ~ 1 + log(Dose), weights = Total, data = df, family = binomial())
+
+summary(fit)
+
+# likelihood ratio test
+pchisq(fit$null.deviance - fit$deviance, 1, lower.tail = FALSE)
+
+# plot data with fitted model
+plot(1 + log(df$Dose), log(df$Survivors/df$Total / (1 - df$Survivors/df$Total)),
+     xlab = "Dose func",
+     ylab = "Survivor logit",
+     xlim = c(-7, -3),
+     ylim = c(-2, 4))
+lines(1 + log(df$Dose), 11.2375 + 1.7094 * (log(df$Dose)),
+     xlim = c(-7, -3),
+     ylim = c(-2, 4))
+
+#ED50
+ed50 <- dose.p(fit)
+dose.ed50 <- exp(ed50) # with dose = does.ed50, 50% numbers of mice are survival
+
+
 ```
 
 

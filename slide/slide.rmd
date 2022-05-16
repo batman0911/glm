@@ -18,6 +18,7 @@ Trong `R`, đối với phân phối `Gamma` và phân phối `inverse Gaussian`
 Data small-leaved lime trong dataset `lime`
 
 ```{r}
+library(tidyverse)
 library(GLMsData); data(lime); str(lime)
 ```
 
@@ -46,6 +47,9 @@ Trong đó
 Với `link function` dạng `log`
 
 ```{r}
+natural_lime <- lime[lime$Origin == 'Natural', ]; str(natural_lime)
+# natural_lime
+
 lime.log <- glm(Foliage ~ Origin * log(DBH), family=Gamma(link="log"),data=lime)
 lime.log$coefficients
 ```
@@ -112,6 +116,7 @@ Xét mô hình gamma `lime.log` đã được fit trong ví dụ 1 với tập d
 ```{r}
 phi.md <- deviance(lime.log)/df.residual(lime.log)
 phi.pearson <- summary( lime.log )$dispersion
+phi.mle <- 0.3736
 c( "Mean Deviance"=phi.md, "Pearson"=phi.pearson)
 ```
 
@@ -126,7 +131,7 @@ Sử dụng ước lượng hợp lý cự đại `MLE`, kết quả thu đượ
 ### Ví du 11.6
 Phân tích cho bảng deviance
 ```{r}
-round(anova(lime.log, test="F"), 3)
+round(anova(lime.log, test="F", dispersion = phi.mle), 3)
 ```
 
 
