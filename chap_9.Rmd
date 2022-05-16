@@ -86,5 +86,11 @@ pvalF <- (1 - pnorm(abs(zF))) * 2
 cbind("male beta" = betaM, "male p-value" = pvalM)
 cbind("female beta" = betaF, "female p-value" = pvalF)
 ```
+```{r}
+# 95% confidence interval for beta
+betaM.l <- betaM - qnorm(0.975) * seM
+betaM.u <- betaM + qnorm(0.975) * seM
+cbind("lower beta" = betaM.l, "mean beta" = betaM, "upper beta" = betaM.u)
+```
 
 
