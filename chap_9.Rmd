@@ -233,5 +233,16 @@ fitG$coefficients
 
 exp(fitG$coefficients[["log2(Dose)"]])
 ```
+```{r}
+fitM <- glm(Killed/Number ~ 1 + log2(Dose), weights = Number, data = bud.m, family = binomial())
+fitF <- glm(Killed/Number ~ 1 + log2(Dose), weights = Number, data = bud.f, family = binomial())
+
+summary(fitM)
+summary(fitF)
+```
+```{r}
+# confint 90% of beta
+confint(fitG, level = 0.9)
+```
 
 

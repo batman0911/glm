@@ -1,0 +1,16 @@
+---
+title: "chap_10"
+author: "linhnm"
+date: "5/17/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+summary(cars)
+```
+
