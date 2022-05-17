@@ -11,6 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
-summary(cars)
+data("danishlc"); str(danishlc)
+
+dlc.m1 <- glm(Cases ~ offset(log(Pop)) + City + Age, family = poisson(), data = danishlc)
+summary(dlc.m1)
+anova(dlc.m1, test="Chisq")
+
+sum(resid(dlc.m1, type = "pearson")^2)
+
+1 - pchisq(dlc.m1$null.deviance - dlc.m1$deviance, dlc.m1$df.null - dlc.m1$df.residual)
+```
+```{r}
+f <- function(x)  (x*log(x)-8273)
+uniroot(f, lower=0.1, upper=100000000)$root
 ```
 
