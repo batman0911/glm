@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 data("danishlc"); str(danishlc)
 
-dlc.m1 <- glm(Cases ~ offset(log(Pop)) + City + Age, family = poisson(), data = danishlc)
+dlc.m1 <- glm(Cases ~ offset(log(Pop)) + City*Age, family = poisson(), data = danishlc)
 summary(dlc.m1)
 anova(dlc.m1, test="Chisq")
 
@@ -25,4 +25,25 @@ sum(resid(dlc.m1, type = "pearson")^2)
 f <- function(x)  (x*log(x)-8273)
 uniroot(f, lower=0.1, upper=100000000)$root
 ```
+
+```{r}
+# 1, Thêm mỗi biến giải thích thì bậc tự do giảm đi 1 đơn vị
+# có 5 biến giải thích, ứng với số groups là 5, 5, 4, 5, 4 thì df = n - p' = 1975 - 5 - 5 - 4 - 5 - 4 - 1
+df0 = 1975 - 5 - 5 - 4 - 5 - 4 - 1
+df0
+#
+P_size <- 5; T_size <- 5; V_size <- 4; D_size <- 5; C_size <- 4
+delta_df_TP <- T_size * P_size
+df_TP <- df0 - delta_df_TP
+# 2,ước lượng dùng mean deviance = D/(n - p')
+c(4695.2/df_TP)
+# 3, likelihood: 1 - pchisq(null_dev - dev, df_null - df)
+
+dev <- c(4695.2,4675.9,4640.1,4598.8,4567.3,4497.1,4462.0,4443.4,4420.8,4390.9)
+null_dev <- 5050.9
+delta_dev <- null_dev - dev
+delta_df <- c(T_size*P_size, T_size*V_size, T_size*D_size, T_size*C_size, P_size*D_size, P_size*C_size, V_size*D_size, V_size*C_size, D_size*C_size)
+1 - pchisq(delta_dev, delta_df)
+```
+
 

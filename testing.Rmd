@@ -19,8 +19,8 @@ library(GLMsData); data(lime); str(lime)
 ## Including Plots
 
 ```{r}
-lime.log <- glm(Foliage ~ Origin * log(DBH), family=Gamma(link="log"),data=lime)
-lime.log$coefficients
+lime.log <- glm(Foliage ~ log(DBH), family=Gamma(link="log"),data=lime)
+#lime.log$coefficients
 ```
 plot
 ```{r}
@@ -43,28 +43,5 @@ c( "Mean Deviance"=phi.md, "Pearson"=phi.pearson)
 
 ```{r}
 round(anova(lime.log, test="F"), 3)
-```
-
-```{r}
-round(anova(lime.log,test="F", dispersion=phi.md), 3)
-```
-
-```{r}
-printCoefmat(coef(summary(lime.log)), 3)
-```
-
-```{r}
-lime.iG <- glm( Foliage ~ Origin * log(DBH), family=inverse.gaussian(link="log"), data=lime)
-```
-
-```{r}
-phi.iG.mle <- deviance(lime.iG)/length(lime$Foliage) # ML estimate
-phi.iG.md <- deviance(lime.iG)/df.residual(lime.iG) # Mean dev
-phi.iG.pearson <- summary( lime.iG )$dispersion # Pearson
-c( "MLE"=phi.iG.mle, "Mean dev."=phi.iG.md, "Pearson"=phi.iG.pearson)
-```
-
-```{r}
-c("Gamma:"=AIC(lime.log), "inv. Gauss.:"=AIC(lime.iG))
 ```
 
